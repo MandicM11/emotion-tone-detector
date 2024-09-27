@@ -1,22 +1,33 @@
 .app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-  }
-  
-  textarea {
-    width: 300px;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
 
+textarea {
+  width: 300px;
+  margin-bottom: 10px;
+}
 
-  
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.result {
+  text-align: center; /* Centriraj sadržaj */
+  margin-top: 20px; /* Razmak iznad rezultata */
+}
+
+.emoji {
+  font-size: 64px; /* Veliki smajli */
+}
+
+.emotion-text {
+  font-size: 20px; /* Velicina teksta ispod smajlija */
+  margin-top: 10px; /* Razmak između smajlića i teksta */
+}

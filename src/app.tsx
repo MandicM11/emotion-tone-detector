@@ -5,29 +5,52 @@ import axios from "axios";
 const App: React.FC = () => {
   const [text, setText] = useState('');
   const [result, setResult] = useState<string | null>(null);
+  const [emoji, setEmoji] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
-  //This is where we handle API call 
+  const emojiMap: Record<string, string> = {
+    joy: '😄',
+    anger: '😡',
+    sadness: '😢',
+    fear: '😱',
+    surprise: '😲',
+    disgust: '🤢',
+    neutral: '😐',
+    confident: '💪', 
+  };
+
   const handleSubmit = async () => {
-    //cant fetch data find correct API
-    const apiUrl = 'https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/{instance_id}/v3/tone?version=2017-09-21';
-    const apiKey = '79e02d44-4cf1-435d-a47a-2c02fc4ea43d';
-  
+    const apiUrl = 'https://api-inference.huggingface.co/models/michellejieli/emotion_text_classifier';
+    const apiKey = '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';
+
     try {
-      const response = await axios.post(apiUrl, { text }, {
+      const response = await axios.post(apiUrl, { inputs: text }, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa('apikey:' + apiKey)}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
       });
-      const tones = response.data.document_tone.tones;
-      setResult(tones.length ? tones[0].tone_name : 'Neutral');
+
+      const emotions = response.data[0];
+
+      if (emotions && emotions.length > 0) {
+        const highestEmotion = emotions.reduce((prev, current) => {
+          return (prev.score > current.score) ? prev : current;
+        });
+
+        setResult(`Confidence: ${(highestEmotion.score * 100).toFixed(2)}%`);
+        setEmoji(emojiMap[highestEmotion.label] || null);
+      } else {
+        setResult('Neutral');
+        setEmoji(emojiMap['neutral']);
+      }
     } catch (error) {
       console.error('Error fetching tone analysis:', error);
       setResult('Error fetching tone analysis.');
+      setEmoji(null);
     }
   };
 
@@ -41,7 +64,8 @@ const App: React.FC = () => {
         rows={5}
       />
       <button onClick={handleSubmit}>Check</button>
-      {result && <div className="result">{result}</div>}
+      {emoji && <div className="emoji" style={{ fontSize: '3rem' }}>{emoji}</div>} {/* Prikazivanje smajlija */}
+      {result && <div className="result">{result}</div>} {/* Prikazivanje rezultata */}
     </div>
   );
 };
