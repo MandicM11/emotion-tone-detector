@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './app.css';
 import axios from "axios";
-
+//add some css styling and change err handling if the correct input is not being entered.
 const App: React.FC = () => {
   // input text
   const [text, setText] = useState('');
